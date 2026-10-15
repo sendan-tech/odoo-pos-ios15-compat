@@ -1,0 +1,74 @@
+<section class="oe_container">
+    <div class="oe_row oe_spaced">
+        <h2 class="oe_slogan" style="color:#714B67;">POS Legacy iPad Support (iOS 15)</h2>
+        <h3 class="oe_slogan">Keep using your iPad Air 2 and other iPadOS 15 tablets with Odoo 19 Point of Sale</h3>
+    </div>
+</section>
+
+<section class="oe_container">
+    <div class="oe_row oe_spaced">
+        <div class="oe_span12">
+            <h3>The problem</h3>
+            <p>
+                Odoo 19 Point of Sale relies on browser features that only exist from Safari 16/17.
+                iPads that stop at <b>iPadOS 15</b> (iPad Air 2, iPad mini 4, iPad 5th generation) run Safari 15.6,
+                and the same engine is used by Chrome and the Odoo app on those devices. As a result:
+            </p>
+            <ul>
+                <li>The register never finishes loading (<code>this._tables.difference is not a function</code>).</li>
+                <li>Prices and taxes cannot be computed (<code>toReversed</code> / <code>toSorted</code> missing).</li>
+                <li>Epson ePOS receipt printing fails (<code>AbortSignal.timeout</code> missing).</li>
+            </ul>
+            <h3>What this module does</h3>
+            <p>
+                It loads a small set of standard-compliant polyfills right after Odoo's module loader, before any
+                Point of Sale code runs. Each polyfill only installs when the browser lacks the feature, so modern
+                browsers and devices are not affected. No configuration, no server-side code.
+            </p>
+            <p>Polyfilled features:</p>
+            <ul>
+                <li><code>Array.prototype.toSorted / toReversed / toSpliced / with</code>, <code>Array.fromAsync</code></li>
+                <li><code>Set.prototype.union / intersection / difference / symmetricDifference / isSubsetOf / isSupersetOf / isDisjointFrom</code></li>
+                <li><code>AbortSignal.timeout / any</code></li>
+                <li><code>Object.groupBy</code>, <code>Map.groupBy</code>, <code>Promise.withResolvers</code></li>
+            </ul>
+            <p>Loaded in the Point of Sale UI, the customer display and the backend.</p>
+        </div>
+    </div>
+</section>
+
+<section class="oe_container">
+    <div class="oe_row oe_spaced">
+        <div class="oe_span12">
+            <h3>Tested</h3>
+            <p>
+                Odoo 19.0 (Community) with Point of Sale demo data, in Safari on iPad with the Safari 15.6 feature set
+                emulated: the register loads, products and taxes compute, payment validates and the receipt is generated.
+                Without the module the register stays on the loading screen.
+            </p>
+            <div class="oe_demo oe_picture oe_screenshot" style="text-align:center;">
+                <img src="screenshot_receipt.png" alt="Odoo 19 POS receipt in Safari on iPad" style="max-width:420px;border:1px solid #ddd;"/>
+            </div>
+            <h3>Notes</h3>
+            <ul>
+                <li>Install it, then fully reload the POS on the device (close and reopen the tab).</li>
+                <li>
+                    For Epson ePOS printers on iPad, the browser must trust the printer's HTTPS certificate, and the
+                    <code>point_of_sale.use_lna</code> system parameter must not be set (Local Network Access mode is
+                    Chromium-only and not supported on iOS).
+                </li>
+                <li>We recommend piloting on one device first. Report issues on GitHub.</li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+<section class="oe_container">
+    <div class="oe_row oe_spaced">
+        <h3 class="oe_slogan">Support</h3>
+        <p class="oe_mt32" style="text-align:center;">
+            Built and maintained by <b>Sendan</b>.
+            Issues and contributions: <a href="https://github.com/sendan-tech/odoo-pos-ios15-compat/issues" target="_blank">github.com/sendan-tech/odoo-pos-ios15-compat</a>
+        </p>
+    </div>
+</section>
